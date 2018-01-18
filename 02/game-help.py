@@ -12,18 +12,25 @@ NUM_LETTERS = 7
 
 def draw_letters():
     """Pick NUM_LETTERS letters randomly. Hint: use stdlib random"""
-    pass
+    hand = []
+    for i in range(NUM_LETTERS):
+        rand_choice = random.choice(POUCH)
+        hand.append(rand_choice)
+    return hand
 
 
 def input_word(draw):
     """Ask player for a word and validate against draw.
     Use _validation(word, draw) helper."""
-    pass 
-
+    word = input("Please suggest a valid word: ")
+    while input(draw) in draw_letters():
+        gen_word = word
+    return gen_word
 
 
 def _validation(word, draw):
     """Validations: 1) only use letters of draw, 2) valid dictionary word"""
+    assert input_word(draw_letters())
     pass
 
 
@@ -63,16 +70,16 @@ def main():
     word = input_word(draw)
     word_score = calc_word_value(word)
     print('Word chosen: {} (value: {})'.format(word, word_score))
-
-    possible_words = get_possible_dict_words(draw)
-
-    max_word = max_word_value(possible_words)
-    max_word_score = calc_word_value(max_word)
-    print('Optimal word possible: {} (value: {})'.format(
-        max_word, max_word_score))
-
-    game_score = word_score / max_word_score * 100
-    print('You scored: {:.1f}'.format(game_score))
+    #
+    # possible_words = get_possible_dict_words(draw)
+    #
+    # max_word = max_word_value(possible_words)
+    # max_word_score = calc_word_value(max_word)
+    # print('Optimal word possible: {} (value: {})'.format(
+    #     max_word, max_word_score))
+    #
+    # game_score = word_score / max_word_score * 100
+    # print('You scored: {:.1f}'.format(game_score))
 
 
 if __name__ == "__main__":
