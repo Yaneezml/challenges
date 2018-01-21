@@ -6,13 +6,14 @@ import itertools
 import random
 
 from data import DICTIONARY, LETTER_SCORES, POUCH
+from collections import Counter
 
 NUM_LETTERS = 7
+hand = []
 
 
 def draw_letters():
     """Pick NUM_LETTERS letters randomly. Hint: use stdlib random"""
-    hand = []
     for i in range(NUM_LETTERS):
         rand_choice = random.choice(POUCH)
         hand.append(rand_choice)
@@ -22,16 +23,23 @@ def draw_letters():
 def input_word(draw):
     """Ask player for a word and validate against draw.
     Use _validation(word, draw) helper."""
-    word = input("Please suggest a valid word: ")
-    while input(draw) in draw_letters():
-        gen_word = word
-    return gen_word
+    word = input("Please suggest a valid word: ").upper()
+
+    return _validation(word, draw)
 
 
 def _validation(word, draw):
     """Validations: 1) only use letters of draw, 2) valid dictionary word"""
-    assert input_word(draw_letters())
-    pass
+    tempList = list(draw)
+    for letters in word.upper():
+        if letters in tempList:
+            tempList.remove(letters)
+        else:
+            raise ValueError("Word {} cannot be created from hand!").format(word)
+    if not word.upper() in DICTIONARY:
+        raise ValueError("{} is not a real word").format(word)
+    else:
+        return word
 
 
 # From challenge 01:
@@ -70,6 +78,7 @@ def main():
     word = input_word(draw)
     word_score = calc_word_value(word)
     print('Word chosen: {} (value: {})'.format(word, word_score))
+
     #
     # possible_words = get_possible_dict_words(draw)
     #
