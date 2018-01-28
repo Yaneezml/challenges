@@ -4,9 +4,9 @@
 
 import itertools
 import random
+from idlelib.multicall import r
 
 from data import DICTIONARY, LETTER_SCORES, POUCH
-from collections import Counter
 
 NUM_LETTERS = 7
 hand = []
@@ -23,9 +23,13 @@ def draw_letters():
 def input_word(draw):
     """Ask player for a word and validate against draw.
     Use _validation(word, draw) helper."""
-    word = input("Please suggest a valid word: ").upper()
-
-    return _validation(word, draw)
+    while True:
+        word = input("Please suggest a valid word: ").upper()
+        try:
+            return _validation(word, draw)
+        except ValueError as e:
+            print(e)
+            continue
 
 
 def _validation(word, draw):
@@ -35,9 +39,9 @@ def _validation(word, draw):
         if letters in tempList:
             tempList.remove(letters)
         else:
-            raise ValueError("Word {} cannot be created from hand!").format(word)
-    if not word.upper() in DICTIONARY:
-        raise ValueError("{} is not a real word").format(word)
+            raise ValueError("Word {} cannot be created from hand!".format(word))
+    if not word.lower() in DICTIONARY:
+        raise ValueError("{} is not a real word".format(word))
     else:
         return word
 
@@ -55,13 +59,22 @@ def calc_word_value(word):
 def get_possible_dict_words(draw):
     """Get all possible words from draw which are valid dictionary words.
     Use the _get_permutations_draw helper and DICTIONARY constant"""
-    pass
+    valid = []
+    for combinations in _get_permutations_draw(draw):
+        if combinations.lower() in DICTIONARY:
+            valid. append(combinations)
+    return valid
 
 
 def _get_permutations_draw(draw):
     """Helper for get_possible_dict_words to get all permutations of draw letters.
     Hint: use itertools.permutations"""
-    pass
+    combo = []
+    for i in range(7):
+        possible = itertools.permutations(draw, i)
+        for x in possible:
+            combo.append(''.join(x).lower())
+    return combo
 
 
 # From challenge 01:
@@ -74,21 +87,21 @@ def main():
     """Main game interface calling the previously defined methods"""
     draw = draw_letters()
     print('Letters drawn: {}'.format(', '.join(draw)))
-
     word = input_word(draw)
     word_score = calc_word_value(word)
     print('Word chosen: {} (value: {})'.format(word, word_score))
 
-    #
-    # possible_words = get_possible_dict_words(draw)
-    #
-    # max_word = max_word_value(possible_words)
-    # max_word_score = calc_word_value(max_word)
-    # print('Optimal word possible: {} (value: {})'.format(
-    #     max_word, max_word_score))
-    #
-    # game_score = word_score / max_word_score * 100
-    # print('You scored: {:.1f}'.format(game_score))
+    print('\n'.join(_get_permutations_draw(draw)))
+    possible_words = get_possible_dict_words(draw)
+    print(possible_words)
+
+    max_word = max_word_value(possible_words)
+    max_word_score = calc_word_value(max_word)
+    print('Optimal word possible: {} (value: {})'.format(
+        max_word, max_word_score))
+
+    game_score = word_score / max_word_score * 100
+    print('You scored: {:.1f}'.format(game_score))
 
 
 if __name__ == "__main__":

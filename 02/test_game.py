@@ -8,6 +8,7 @@ from game import _validation
 NUM_LETTERS = 7
 TEST_WORDS = ('bob', 'julian', 'pybites', 'quit', 'barbeque')
 
+
 class TestGame(unittest.TestCase):
 
     def setUp(self):
